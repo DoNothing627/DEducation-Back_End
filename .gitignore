@@ -1,0 +1,8 @@
+.idea
+node_modules/
+.env
+.DS_Store
+.github/workflows
+# Dockerfile
+# src/services/events/gamefi/data/*
+# src/services/events/airdrop-ms/data/airdrop-reports.csv
