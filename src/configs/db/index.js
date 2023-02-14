@@ -6,10 +6,10 @@ module.exports = {
     wtimeout: 10000,
     useUnifiedTopology: true,
     useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
+    // useFindAndModify: false,
+    // useCreateIndex: true,
     serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
     socketTimeoutMS: 30000,
-    poolSize: 10,
+    // poolSize: 10,
   },
 };

@@ -2,7 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
 const container = require("./src/configs/dependencies/container");
-const ErrorHandler = require("./src/utils/error_handler.util");
+const ErrorHandler = require("./src/utils/error-handler.util");
 let morgan = require("morgan");
 const cors = require("cors");
 const app = express();

@@ -1,5 +1,18 @@
 require("dotenv").config();
 
+//Entity
+const Entity = require("../entities");
+
+//constant
+// const CONSTANTS = require('../constants')
+
+//utils
+const Utils = require("../utils");
+
+const container = require("../configs/dependencies/container");
+const model = container.resolve("model");
+// const ctrl = container.resolve('ctrl')
+
 const init = async () => {
   try {
     await initTasks();
