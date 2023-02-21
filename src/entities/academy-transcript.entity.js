@@ -5,7 +5,6 @@ const academyTranscript = new Schema(
   {
     hashcode: {
       type: String,
-      unique: true,
     },
     student_id: {
       type: Schema.Types.ObjectId,
@@ -29,8 +28,11 @@ const academyTranscript = new Schema(
     },
     class: {
       type: Schema.Types.ObjectId,
-      ref: "Class",
+      ref: "Classroom",
       require: true,
+    },
+    transcript_hash_code: {
+      type: String,
     },
   },
   { timestamps: true }

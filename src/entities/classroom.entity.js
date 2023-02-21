@@ -26,6 +26,12 @@ const classroom = new Schema(
     subject: {
       type: String,
     },
+    image: {
+      type: Number,
+    },
+    root_transcript: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

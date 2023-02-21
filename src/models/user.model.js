@@ -6,6 +6,20 @@ class User extends BaseModel {
     this.model = model;
     // console.log(this.model, "alo");
   }
+
+  getListUser = async ({ listStudentsWallet }) => {
+    console.log("model transcript", listStudentsWallet);
+    try {
+      let data = await this.model.aggregate([
+        {
+          $match: {
+            wallet: { $in: listStudentsWallet },
+          },
+        },
+      ]);
+      return data;
+    } catch {}
+  };
 }
 
 module.exports = User;

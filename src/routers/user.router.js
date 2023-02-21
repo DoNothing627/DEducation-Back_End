@@ -28,7 +28,7 @@ class User {
     );
 
     this.router.get(
-      "/:wallet",
+      "/nonce/:wallet",
       jsonParser,
       RequireJsonContent,
       apiHandler(this.ctrl.User.GetNonce)
@@ -39,6 +39,13 @@ class User {
       jsonParser,
       RequireJsonContent,
       apiHandler(this.ctrl.User.VerifySignature)
+    );
+    this.router.get(
+      "/profile",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.User.GetMyProfile)
     );
   }
   getRouter = () => {

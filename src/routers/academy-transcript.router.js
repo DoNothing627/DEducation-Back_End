@@ -28,25 +28,47 @@ class AcademyTranscript {
       apiHandler(this.ctrl.AcademyTranscript.CreateNewTranscript)
     );
     this.router.get(
-      "/",
+      "/student",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
       apiHandler(this.ctrl.AcademyTranscript.GetMyTranscripts)
     );
-    this.router.get(
-      "/:user_id",
+    // this.router.get(
+    //   "/:user_id",
+    //   jsonParser,
+    //   RequireJsonContent,
+    //   TokenAuthenticate,
+    //   apiHandler(this.ctrl.AcademyTranscript.GetUserTranscripts)
+    // );
+    // academy-transcript/class-transcript
+    this.router.post(
+      "/class-transcript",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
-      apiHandler(this.ctrl.AcademyTranscript.GetUserTranscripts)
+      apiHandler(this.ctrl.AcademyTranscript.UploadClassTranscript)
     );
     this.router.post(
-      "/upload-class-report",
+      "/student-transcript",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
-      apiHandler(this.ctrl.AcademyTranscript.UploadClassReport)
+      apiHandler(this.ctrl.AcademyTranscript.UploadStudentTranscript)
+    );
+    this.router.get(
+      "/teacher",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.AcademyTranscript.GetMyTranscriptsForTeacher)
+    );
+    this.router.get(
+      "/self",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.AcademyTranscript.GetMyTranscriptsForStudent)
     );
   }
   getRouter = () => {

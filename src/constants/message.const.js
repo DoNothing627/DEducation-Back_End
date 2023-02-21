@@ -3,6 +3,7 @@ module.exports = {
     WALLET_IN_USE: "Waller in use",
     INVALID_WALLET: "This wallet does not exist",
     SIGNATURE_VERIFICATION_FAILED: "Signature verification failed",
+    NOT_EXISTED: "This user does not exist",
   },
   SEMESTER: {
     ALREADY_EXISTED: "This semester has already existed",

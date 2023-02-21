@@ -106,14 +106,16 @@ class BaseModel {
 
   async findMany(
     cond,
+    populate1 = "",
+    populate2 = "",
     page = 1,
     limit = 20,
     sort = { createdAt: -1 },
     opts = {},
-    populate = "",
     select = "",
     session = null
   ) {
+    // console.log(page, limit, sort, opts, populate, "populate");
     try {
       limit = parseInt(limit);
       page = parseInt(page);
@@ -124,7 +126,8 @@ class BaseModel {
           .find(cond, opts)
           .lean()
           .collation({ locale: "en" })
-          .populate(populate)
+          .populate(populate1)
+          .populate(populate2)
           .sort(sort)
           .select(select)
           .session(session)
@@ -136,7 +139,8 @@ class BaseModel {
           .find(cond, opts)
           .lean()
           .collation({ locale: "en" })
-          .populate(populate)
+          .populate(populate1)
+          .populate(populate2)
           .sort(sort)
           .select(select)
           .skip(skip)
@@ -174,12 +178,13 @@ class BaseModel {
     }
   }
 
-  async findOne(cond, opts = {}, populate = "", select = "", session) {
+  async findOne(cond, populate1 = "", populate2 ="", opts = {}, select = "", session) {
     try {
       const data = await this.model
         .findOne(cond, opts)
         .lean()
-        .populate(populate)
+        .populate(populate1)
+        .populate(populate2)
         .select(select)
         .session(session)
         .exec();
@@ -193,7 +198,8 @@ class BaseModel {
     cond,
     opts = {},
     sort = {},
-    populate = "",
+    populate1 = "",
+    populate2 = "",
     select = "",
     session
   ) {
@@ -201,7 +207,8 @@ class BaseModel {
       const data = await this.model
         .findOne(cond, opts)
         .lean()
-        .populate(populate)
+        .populate(populate1)
+        .populate(populate2)
         .select(select)
         .sort(sort)
         .session(session)

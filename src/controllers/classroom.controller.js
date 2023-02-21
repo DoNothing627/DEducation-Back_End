@@ -33,29 +33,50 @@ class Classroom {
 
   GetMyClassrooms = async ({ user, semester }) => {
     try {
-      var classroom;
+      var classrooms;
+      var classroomResponse = [];
       if (user.role == CONSTANTS.EntityConst.ROLE.SCHOOL) {
-        classroom = await this.model.Classroom.findMany({
+        classrooms = await this.model.Classroom.findMany({
           school: user._id,
           semester: semester,
         });
       }
       if (user.role == CONSTANTS.EntityConst.ROLE.TEACHER) {
-        classroom = await this.model.Classroom.findMany({
+        classrooms = await this.model.Classroom.findMany({
           teacher: user._id,
           semester: semester,
         });
+        classrooms.forEach((classroom) =>
+          classroomResponse.push({
+            _id: classroom._id,
+            subject: classroom.subject,
+            code: classroom.code,
+            image: classroom.image,
+          })
+        );
       }
       if (user.role == CONSTANTS.EntityConst.ROLE.STUDENT) {
-        classroom = await this.model.AcademyTranscript.findMany({
-          student: user._id,
-          semester: semester,
-        }).populate({
-          path: "semester",
-          select: "_id semester school teacher code subject",
-        });
+        classrooms = await this.model.AcademyTranscript.findMany(
+          {
+            student_id: user._id,
+            semester: semester,
+          },
+          "class",
+          "teacher_id"
+        );
+        classrooms.forEach((classroom) =>
+          classroomResponse.push({
+            _id: classroom.class._id,
+            subject: classroom.class.subject,
+            code: classroom.class.code,
+            image: classroom.class.image,
+            teacher_name: classroom.teacher_id.username,
+            teacher_wallet: classroom.teacher_id.wallet,
+          })
+        );
       }
-      return ResponseFormat.formatResponse(200, "Ok", classroom);
+      console.log(classroomResponse, "classroom");
+      return ResponseFormat.formatResponse(200, "Ok", classroomResponse);
     } catch (error) {
       throw error;
     }

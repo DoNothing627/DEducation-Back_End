@@ -29,11 +29,11 @@ class PermissionRelaitonship {
     );
 
     this.router.get(
-      "/:permission_type",
+      "/self",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
-      apiHandler(this.ctrl.PermissionRelaitonship.GetMyRelationship)
+      apiHandler(this.ctrl.PermissionRelaitonship.GetMyRelationships)
     );
   }
   getRouter = () => {

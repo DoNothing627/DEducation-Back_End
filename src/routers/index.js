@@ -22,7 +22,7 @@ module.exports = class RouterRepository {
       "/permission-relationship",
       this.PermissionRelaitonship.getRouter()
     );
-    this.app.use("/class", this.Classroom.getRouter());
+    this.app.use("/classroom", this.Classroom.getRouter());
     this.app.use("/semester", this.Semester.getRouter());
     return this.app;
   };

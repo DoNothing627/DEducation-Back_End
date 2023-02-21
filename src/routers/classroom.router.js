@@ -28,7 +28,7 @@ class Classroom {
       apiHandler(this.ctrl.Classroom.CreateClassroom)
     );
     this.router.get(
-      "/",
+      "/self",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,

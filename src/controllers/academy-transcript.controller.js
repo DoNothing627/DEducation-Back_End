@@ -1,7 +1,8 @@
 const { RestError, ResponseFormat } = require("../utils");
 const CONSTANTS = require("../constants");
 const fs = require("fs");
-const ipfs = require("../utils/ipfs.util");
+const ipfsClient = require("../utils/ipfs.util");
+const ObjectId = require("mongoose").Types.ObjectId;
 
 class AcademyTranscript {
   constructor(opts) {
@@ -139,8 +140,9 @@ class AcademyTranscript {
     }
   };
 
-  UploadClassReport = async ({ user, classroom_id, class_reports }) => {
+  UploadClassTranscript = async ({ user, classroom_id, root_transcript }) => {
     try {
+      console.log(classroom_id, root_transcript, "upload class transcript");
       // if (user.role != CONSTANTS.EntityConst.ROLE.TEACHER) {
       //   throw RestError.NewInvalidInputError(
       //     CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
@@ -159,42 +161,156 @@ class AcademyTranscript {
       //     CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
       //   );
       // }
+      // class_reports.map((e) => {
+      // var writeStream = fs.createWriteStream(
+      //   `./public/transcripts/${classroom_id}_${e[0]}.txt`
+      // );
+      // writeStream.write(e[1]);
+      // writeStream.write("\n");
+      // writeStream.write(e[2]);
+      // writeStream.end();
+      // var buffer = fs.readFileSync(
+      //   `./public/transcripts/${classroom_id}_${e[0]}.txt`
+      // ).buffer;
+      // const ipfs = ipfsClient.add("Hello World");
+      // let result = ipfs.add(buffer);
+      // console.log(result, "result");
+      // ipfsClient.files.add(buffer, (err, res) => {
+      //   if (err) {
+      //     console.log(err);
+      //     return;
+      //   }
+      //   console.log("ipfsHash", res[0].hash);
+      // });
+      //   ,
+      //   content,
+      //   (err) => {
+      //     if (err) {
+      //       console.error(err);
+      //     }
+      //     // file written successfully
+      //   }
+      // );
+      // });
+      var classroom = await this.model.Classroom.findOneAndUpdate(
+        { _id: ObjectId(classroom_id) },
+        { root_transcript: root_transcript }
+      );
+      return ResponseFormat.formatResponse(200, "Ok", classroom);
+    } catch (error) {
+      throw error;
+    }
+  };
 
-      class_reports.map((e) => {
-        const content = "Some content!";
-        var writeStream = fs.createWriteStream(
-          `./public/transcripts/${classroom_id}_${e[0]}.txt`
-        );
-        writeStream.write(e[1]);
-        writeStream.write("\n");
-        writeStream.write(e[2]);
-        writeStream.end();
+  UploadStudentTranscript = async ({ user, transcriptStudents }) => {
+    try {
+      console.log(transcriptStudents, "upload class transcript");
 
-        var buffer = fs.readFileSync(
-          `./public/transcripts/${classroom_id}_${e[0]}.txt`
-        ).buffer;
+      // var classroom = await this.model.Classroom.findOneAndUpdate(
+      //   { _id: ObjectId(classroom_id) },
+      //   { root_transcript: root_transcript }
+      // );
+      var listStudentsWallet = [];
+      var listStudentsId = [];
+      var classroom = transcriptStudents[0].Classroom;
 
-        // console.log("buffer", buffer);
+      // var students = await this.model.User.findMany({})
+      transcriptStudents.forEach((transcriptStudent) =>
+        listStudentsWallet.push(transcriptStudent.StudentAddress)
+      );
 
-        ipfs.files.add(buffer, (err, res) => {
-          if (err) {
-            console.log(err);
-            return;
+      var users = await this.model.User.getListUser({ listStudentsWallet });
+
+      users.forEach((user) => {
+        listStudentsId.push(user._id);
+        transcriptStudents.forEach((transcriptStudent) => {
+          if (transcriptStudent.StudentAddress == user.wallet) {
+            transcriptStudent.studentId = user._id;
           }
-          setIpfsHash(res[0].hash);
-          console.log("ipfsHash", res[0].hash);
         });
-
-        //   ,
-        //   content,
-        //   (err) => {
-        //     if (err) {
-        //       console.error(err);
-        //     }
-        //     // file written successfully
-        //   }
-        // );
       });
+
+      var transcripts = await this.model.AcademyTranscript.getListTranscript({
+        listStudentsId,
+        classroom,
+      });
+
+      // transcripts.forEach((transcript) => {
+      //   transcriptStudents.forEach((transcriptStudent) => {
+      //     if (transcriptStudents.studentId == transcript.student_id) {
+      //       transcript.transcript_hash_code = transcriptStudent.hashcode;
+      //     }
+      //   });
+      // });
+
+      // transcripts = await this.model.AcademyTranscript.updateMany(transcripts);
+
+      transcriptStudents.forEach((transcriptStudent) => {
+        users.forEach(async (user) => {
+          if (transcriptStudent.StudentAddress == user.wallet) {
+            await this.model.AcademyTranscript.findOneAndUpdate(
+              { student_id: user._id, class: ObjectId(classroom) },
+              { transcript_hash_code: transcriptStudent.Hashcode }
+            );
+          }
+        });
+      });
+
+      console.log("transcripts", transcripts);
+
+      return ResponseFormat.formatResponse(200, "Ok", transcripts);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  GetMyTranscriptsForTeacher = async ({ user, classroom }) => {
+    try {
+      var classrooms = await this.model.Classroom.findOne({
+        _id: ObjectId(classroom),
+      });
+      console.log(classrooms.teacher, user._id.toString(), "classroom");
+      if (classrooms.teacher.toString() != user._id.toString()) {
+        throw RestError.NewInvalidInputError(
+          CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
+        );
+      }
+      return ResponseFormat.formatResponse(200, "Ok", classrooms);
+    } catch (error) {
+      throw error;
+    }
+  };
+  GetMyTranscriptsForStudent = async ({ user, classroom }) => {
+    try {
+      var transcript = await this.model.AcademyTranscript.findOne(
+        {
+          student_id: user._id,
+          class: ObjectId(classroom),
+        },
+        "teacher_id",
+        "class"
+      );
+      console.log(transcript, "transcript");
+      // if (classrooms.teacher.toString() != user._id.toString()) {
+      //   throw RestError.NewInvalidInputError(
+      //     CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
+      //   );
+      // }
+
+      var myTranscriptsForStudentResponse = {
+        root_transcript: transcript?.transcript_hash_code,
+        teacher_address: transcript.teacher_id.wallet,
+        image: transcript.class.image,
+        subject: transcript.class.subject,
+        code: transcript.class.code,
+        _id: transcript.class._id,
+      };
+
+      return ResponseFormat.formatResponse(
+        200,
+        "Ok",
+        myTranscriptsForStudentResponse
+      );
     } catch (error) {
       throw error;
     }

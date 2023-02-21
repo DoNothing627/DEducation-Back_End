@@ -2,6 +2,7 @@ const {responseHandle} = require('../utils/response-handle.util')
 
 exports.apiHandler = (asyncCb) => {
     return async (req, res, next) => {
+        // console.log(req, "req");
         try {
             const { lang } = req.headers
             const { user, auth_provider } = req
