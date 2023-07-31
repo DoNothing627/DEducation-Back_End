@@ -31,6 +31,12 @@ const academyTranscript = new Schema(
       ref: "Classroom",
       require: true,
     },
+    mark: {
+      type: String,
+    },
+    txHash:{
+      type: String,
+    },
     transcript_hash_code: {
       type: String,
     },

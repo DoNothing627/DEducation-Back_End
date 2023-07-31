@@ -14,17 +14,28 @@ const user = new Schema(
       unique: true,
       require: true,
     },
+    student_id_code: {
+      type: String,
+      // unique: true,
+    },
     password: {
       type: String,
-      required: true,
+      // required: true,
     },
     date_of_birth: {
       type: String,
+    },
+    public_status: {
+      type: Boolean,
     },
     role: {
       type: Number,
       enum: Object.values(Constant.ROLE),
       require: true,
+    },
+    diploma: {
+      type: Schema.Types.ObjectId,
+      ref: "Diploma",
     },
     nonce: {
       type: Number,

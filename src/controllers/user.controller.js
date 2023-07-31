@@ -16,33 +16,35 @@ class User {
     password,
     date_of_birth,
     school_id,
-    role_type,
+    role,
+    student_id_code,
   }) => {
     try {
-      if (user.role != CONSTANTS.EntityConst.ROLE.SCHOOL) {
-        throw RestError.NewInvalidInputError(
-          CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
-        );
-      }
+      // if (user.role != CONSTANTS.EntityConst.ROLE.SCHOOL) {
+      //   throw RestError.NewInvalidInputError(
+      //     CONSTANTS.MessageConst.ROLE.YOU_HAVE_NO_PERMISSION
+      //   );
+      // }
       var user = await this.model.User.findOne({ wallet: wallet });
       if (user != null) {
         throw RestError.NewInvalidInputError(
           CONSTANTS.MessageConst.USER.WALLET_IN_USE
         );
       }
-      if (user.role != CONSTANTS.Entity.ROLE.SCHOOL) {
-        throw RestError.NewInvalidInputError(
-          CONSTANTS.MessageConst.USER.YOU_HAVE_NO_PERMISSION
-        );
-      }
+
       user = await this.model.User.createOne({
         wallet,
         username,
         password,
         date_of_birth,
         school_id,
-        role_type,
+        role,
+        student_id_code,
+        public_status: true
       });
+
+      return ResponseFormat.formatResponse(200, "Ok", user);
+
     } catch (error) {
       throw error;
     }
@@ -138,6 +140,7 @@ class User {
           200,
           "Successfully",
           {
+            id: user._id,
             wallet: user.wallet,
             username: user.username,
             date_of_birth: user.date_of_birth,
@@ -166,6 +169,44 @@ class User {
         },
         200
       );
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  GetMyPublicStatus = async (user) => {
+    try {
+      user = user.user;
+      var User = await this.model.User.findOne({
+        _id: ObjectId(user._id.toString()),
+      });
+      console.log("User", User);
+      return ResponseFormat.formatResponse(200, "Successfully", User, 200);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  UpdateMyPublicStatus = async (user) => {
+    try {
+      user = user.user;
+      var User = await this.model.User.findOne({
+        _id: ObjectId(user._id.toString()),
+      });
+
+      var updatedPublicStatus;
+      if (User.public_status == true) updatedPublicStatus = false;
+      else updatedPublicStatus = true;
+
+      User = await this.model.User.findOneAndUpdate(
+        {
+          _id: ObjectId(user._id.toString()),
+        },
+        { public_status: updatedPublicStatus }
+      );
+
+      console.log("User", User);
+      return ResponseFormat.formatResponse(200, "Successfully", User, 200);
     } catch (error) {
       throw error;
     }

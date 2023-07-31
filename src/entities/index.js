@@ -4,6 +4,7 @@ const PermissionRelaitonship = require("./permission-relationship.entity");
 const Action = require("./action.entity");
 const Classroom = require("./classroom.entity");
 const Semester = require("./semester.entity");
+const Diploma = require("./diploma.entity");
 
 module.exports = {
   User,
@@ -12,4 +13,5 @@ module.exports = {
   Action,
   Classroom,
   Semester,
+  Diploma,
 };

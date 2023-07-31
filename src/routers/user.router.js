@@ -47,6 +47,20 @@ class User {
       TokenAuthenticate,
       apiHandler(this.ctrl.User.GetMyProfile)
     );
+    this.router.get(
+      "/public-status",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.User.GetMyPublicStatus)
+    );
+    this.router.put(
+      "/public-status",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.User.UpdateMyPublicStatus)
+    );
   }
   getRouter = () => {
     return this.router;

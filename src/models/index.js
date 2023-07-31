@@ -8,6 +8,7 @@ const AcademyTranscript = require("./academy-transcript.model");
 const PermissionRelaitonship = require("./permission-relationship.model");
 const Classroom = require("./classroom.model");
 const Semester = require("./semester.model");
+const Diploma = require("./diploma.model");
 
 module.exports = class ModelRepository {
   constructor() {
@@ -19,6 +20,7 @@ module.exports = class ModelRepository {
     );
     this.Classroom = new Classroom(Entity.Classroom);
     this.Semester = new Semester(Entity.Semester);
+    this.Diploma = new Diploma(Entity.Diploma);
 
     this.connect();
   }

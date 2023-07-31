@@ -70,6 +70,27 @@ class AcademyTranscript {
       TokenAuthenticate,
       apiHandler(this.ctrl.AcademyTranscript.GetMyTranscriptsForStudent)
     );
+    this.router.get(
+      "/all-self",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.AcademyTranscript.GetMyAllTranscriptsForStudent)
+    );
+    this.router.get(
+      "/:userId",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.AcademyTranscript.GetAllTranscriptsOfAStudent)
+    );
+    this.router.put(
+      "/",
+      jsonParser,
+      RequireJsonContent,
+      TokenAuthenticate,
+      apiHandler(this.ctrl.AcademyTranscript.UpdateTxHashTranscript)
+    );
   }
   getRouter = () => {
     return this.router;

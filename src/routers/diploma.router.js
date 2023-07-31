@@ -15,7 +15,7 @@ const { jsonValidate } = require("../middleware/json-validate");
 
 const { apiHandler, apiFilesHandler } = require("../middleware/handler");
 
-class PermissionRelaitonship {
+class Diploma {
   constructor(opts) {
     this.ctrl = opts.ctrl;
     this.router = express.Router();
@@ -25,22 +25,14 @@ class PermissionRelaitonship {
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
-      apiHandler(this.ctrl.PermissionRelaitonship.CreateNewRelationship)
+      apiHandler(this.ctrl.Diploma.CreateDiploma)
     );
-
-    this.router.get(
-      "/self",
+    this.router.put(
+      "/",
       jsonParser,
       RequireJsonContent,
       TokenAuthenticate,
-      apiHandler(this.ctrl.PermissionRelaitonship.GetMyRelationships)
-    );
-    this.router.get(
-      "/school-students",
-      jsonParser,
-      RequireJsonContent,
-      TokenAuthenticate,
-      apiHandler(this.ctrl.PermissionRelaitonship.GetListStudentsOfSchool)
+      apiHandler(this.ctrl.Diploma.UpdateTxHashDiploma)
     );
   }
   getRouter = () => {
@@ -48,4 +40,4 @@ class PermissionRelaitonship {
   };
 }
 
-module.exports = PermissionRelaitonship;
+module.exports = Diploma;
